@@ -10,7 +10,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 export class UserController {
   constructor(private readonly userService: UserService) {}
   // 创建user路由 user/createUser
-  @Post('createUser')
+  @Post('register')
   async createUser(@Body() body: CreateUserDto) {
     return this.userService.create(body);
   }

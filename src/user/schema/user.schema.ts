@@ -19,8 +19,11 @@ export class User extends Document {
   @Prop({ default: 0 })
   age: number;
 
-  @Prop({ required: true })
+  @Prop({required: true})
   email: string;
+
+  @Prop({ required: true })
+  phone: string;
 
   @Prop()
   QQ: string;

@@ -13,9 +13,9 @@ export class UserService {
   constructor(@InjectModel("User") private user: Model<UserDocument>) {
   }
 
-  // 创建用户
+  // 用户注册
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const existingUser = await this.user.findOne({ email: createUserDto.email });
+    const existingUser = await this.user.findOne({ $or: [{ email: createUserDto.email }, { phone: createUserDto.phone }] });
     if (existingUser) {
       throw new HttpException("用户已存在", HttpStatus.BAD_REQUEST);
     }
@@ -28,6 +28,18 @@ export class UserService {
     return await createUser.save();
   }
 
+  // 用户登入
+  async login(email: string, password: string): Promise<User> {
+    const user = await this.user.findOne({ email });
+    if (!user) {
+      throw new HttpException("用户不存在", HttpStatus.BAD_REQUEST);
+    }
+    if (user.password !== md5(password)) {
+      throw new HttpException("密码错误", HttpStatus.BAD_REQUEST);
+    }
+    return user;
+  }
+
   // 查找用户列表
   async findAll(): Promise<User[]> {
     // 这里是异步的
@@ -37,21 +49,18 @@ export class UserService {
   // 查找
   async findOne(name: string): Promise<User[]> {
     // 这里是异步的
-    const temp = await this.user.find({ name });
-    return temp;
+    return this.user.find({ name });
   }
 
   // 删除
   async delete(sid: number) {
     // 这里是异步的  remove 方法删除成功并返回相应的个数
-    const temp = await this.user.remove({ _id: sid });
-    return temp;
+    return this.user.remove({ _id: sid });
   }
 
   // 修改
   async updateUser(sid: string, data: any) {
     // 这里是异步的  remove 方法删除成功并返回相应的个数
-    const temp = await this.user.updateOne({ _id: sid }, { $set: data });
-    return temp;
+    return this.user.updateOne({ _id: sid }, { $set: data });
   }
 }
