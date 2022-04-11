@@ -7,17 +7,41 @@ export type UserDocument = User & Document;
 
 @Schema()
 export class User extends Document {
+  @Prop({ required: true })
+  uuid: string;
+
   @Prop()
   name: string;
 
-  @Prop({ required: true })
+  @Prop()
+  game_id: string;
+
+  @Prop({ default: 0 })
   age: number;
 
-  @Prop({required: true})
-  password: string;
+  @Prop({ required: true })
+  email: string;
 
   @Prop()
-  height: number;
+  QQ: string;
+
+  @Prop()
+  imageUrl: string;
+
+  @Prop({ default: 0 })
+  score: number;
+
+  @Prop({ default: false })
+  is_whitelist: boolean;
+
+  @Prop({ required: true })
+  password: string;
+
+  @Prop({ type: Date, default: Date.now })
+  creat_time: Date;
+
+  @Prop({ type: Date, default: Date.now })
+  update_time: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
