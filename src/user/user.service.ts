@@ -6,6 +6,7 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { v4 } from "uuid";
 import { md5 } from "../utils";
+import { VerifyUserDto } from "./dto/verify-user.dto";
 
 @Injectable()
 export class UserService {
@@ -29,12 +30,14 @@ export class UserService {
   }
 
   // 用户登入
-  async login(email: string, password: string): Promise<User> {
-    const user = await this.user.findOne({ email });
+  async login(verifyUser: VerifyUserDto): Promise<User> {
+    const user = await this.user.findOne(
+      { phone: verifyUser.phone },
+      { uuid: 1, name: 1, phone: 1, email: 1, password: 1 });
     if (!user) {
       throw new HttpException("用户不存在", HttpStatus.BAD_REQUEST);
     }
-    if (user.password !== md5(password)) {
+    if (user.password !== md5(verifyUser.password.toString())) {
       throw new HttpException("密码错误", HttpStatus.BAD_REQUEST);
     }
     return user;

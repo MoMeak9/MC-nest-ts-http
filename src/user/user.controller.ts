@@ -5,6 +5,7 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/
 import { UserService } from './user.service';
 // 引入创建用户 DTO 用于限制从接口处传来的参数
 import { CreateUserDto } from './dto/create-user.dto';
+import { VerifyUserDto } from "./dto/verify-user.dto";
 // 配置局部路由
 @Controller('user')
 export class UserController {
@@ -13,6 +14,11 @@ export class UserController {
   @Post('register')
   async createUser(@Body() body: CreateUserDto) {
     return this.userService.create(body);
+  }
+  // 用户登入路由 user/login
+  @Post('login')
+  async login(@Body() body: VerifyUserDto) {
+    return this.userService.login(body);
   }
   //查找所有 user 路由
   @Get('findAll')
