@@ -6,7 +6,6 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { v4 } from "uuid";
 import { md5 } from "../utils";
-import { VerifyUserDto } from "./dto/verify-user.dto";
 
 @Injectable()
 export class UserService {
@@ -29,20 +28,6 @@ export class UserService {
     return await createUser.save();
   }
 
-  // 用户登入
-  async login(verifyUser: VerifyUserDto): Promise<User> {
-    const user = await this.user.findOne(
-      { phone: verifyUser.phone },
-      { uuid: 1, name: 1, phone: 1, email: 1, password: 1 });
-    if (!user) {
-      throw new HttpException("用户不存在", HttpStatus.BAD_REQUEST);
-    }
-    if (user.password !== md5(verifyUser.password.toString())) {
-      throw new HttpException("密码错误", HttpStatus.BAD_REQUEST);
-    }
-    return user;
-  }
-
   // 查找用户列表
   async findAll(): Promise<User[]> {
     // 这里是异步的
@@ -50,9 +35,9 @@ export class UserService {
   }
 
   // 查找
-  async findOne(name: string): Promise<User[]> {
+  async findOne(email: string): Promise<User[]> {
     // 这里是异步的
-    return this.user.find({ name });
+    return this.user.find({ email });
   }
 
   // 删除
