@@ -2,7 +2,6 @@ import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 import { User, UserDocument } from "./schema/user.schema";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { CreateUserDto } from "./dto/create-user.dto";
 import { v4 } from "uuid";
 import { md5 } from "../utils";
 
@@ -12,7 +11,7 @@ export class UserService {
   constructor(@InjectModel("User") private user: Model<UserDocument>) {}
 
   // 用户注册
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto): Promise<User> {
     const existingUser = await this.user.findOne({ $or: [{ email: createUserDto.email }, { phone: createUserDto.phone }] });
     if (existingUser) {
       throw new HttpException("用户已存在", HttpStatus.BAD_REQUEST);
