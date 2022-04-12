@@ -1,4 +1,3 @@
-/* user.service.ts */
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 import { User, UserDocument } from "./schema/user.schema";
@@ -10,8 +9,7 @@ import { md5 } from "../utils";
 @Injectable()
 export class UserService {
   // 注册Schema后，可以使用 @InjectModel() 装饰器将 User 模型注入到 UserService 中:
-  constructor(@InjectModel("User") private user: Model<UserDocument>) {
-  }
+  constructor(@InjectModel("User") private user: Model<UserDocument>) {}
 
   // 用户注册
   async create(createUserDto: CreateUserDto): Promise<User> {

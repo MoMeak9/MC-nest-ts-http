@@ -7,6 +7,7 @@ import { UserModule } from "./user/user.module";
 // 引入 Mongoose
 import { MongooseModule } from "@nestjs/mongoose";
 import { AuthModule } from './auth/auth.module';
+import { ExamModule } from './exam/exam.module';
 
 @Module({
   imports: [
@@ -14,7 +15,8 @@ import { AuthModule } from './auth/auth.module';
     ConfigModule.forRoot({ isGlobal: true, envFilePath: [envConfig.path] }),
     ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRoot(`${process.env.DATABASE_URL}`),
-    AuthModule
+    AuthModule,
+    ExamModule
   ],
   controllers: [AppController],
   providers: [AppService]
