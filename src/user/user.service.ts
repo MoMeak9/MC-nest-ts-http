@@ -4,11 +4,13 @@ import { User, UserDocument } from "./schema/user.schema";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { v4 } from "uuid";
 import { md5 } from "../utils";
+import { getPagination } from "../utils/paging";
 
 @Injectable()
 export class UserService {
   // 注册Schema后，可以使用 @InjectModel() 装饰器将 User 模型注入到 UserService 中:
-  constructor(@InjectModel("User") private user: Model<UserDocument>) {}
+  constructor(@InjectModel("User") private user: Model<UserDocument>) {
+  }
 
   // 用户注册
   async create(createUserDto): Promise<User> {
@@ -26,9 +28,9 @@ export class UserService {
   }
 
   // 查找用户列表
-  async findAll(): Promise<User[]> {
+  async findAll(): Promise<any> {
     // 这里是异步的
-    return await this.user.find().exec();
+    return await getPagination(this.user, {});
   }
 
   // 查找
