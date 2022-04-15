@@ -14,7 +14,7 @@ export class AuthService {
     return this.jwtService.sign(user);
   }
 
-  async login(user: Partial<User>,email:string): Promise<any> {
+  async login(user: Partial<User>, email: string): Promise<any> {
     const existingUser = await this.userService.findOne(email);
     if (!existingUser) {
       throw new HttpException("用户不存在", HttpStatus.BAD_REQUEST);
@@ -22,7 +22,14 @@ export class AuthService {
     if (existingUser[0].password !== md5(user.password)) {
       throw new HttpException("密码错误", HttpStatus.BAD_REQUEST);
     }
-    return existingUser[0];
+    await this.userService.createUserBehavior(existingUser[0]._id, "LOGIN");
+    const token = this.createToken({
+      ...existingUser[0]
+    });
+    return {
+      token,
+      userInfo: existingUser[0]
+    };
   }
 
   async getUser(user) {

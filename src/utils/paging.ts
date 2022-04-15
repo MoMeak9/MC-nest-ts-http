@@ -2,7 +2,7 @@ import { Model } from "mongoose";
 
 export async function getPagination(
   model: Model<any>,
-  queryCondition: object,
+  queryCondition: object = {},
   currentPage = 1,
   pageSize = 10,
   orderBy: object = { "_id": -1 }) {

@@ -65,4 +65,21 @@ export class UserController {
   async getUserInfo(@Req() req) {
     return req.user;
   }
+
+  // 用户行为记录
+  @ApiOperation({ summary: "用户行为记录" })
+  @ApiBearerAuth() // swagger文档设置token
+  @UseGuards(AuthGuard("jwt"))
+  @Get("createUserBehavior")
+  async userBehavior(@Req() req) {
+    return this.userService.createUserBehavior(req.user,'LOGIN');
+  }
+
+  // 创建验证码
+  @ApiOperation({ summary: "创建验证码" })
+  @Post("sentCode")
+  async sentCode(@Body() body: any) {
+    const {email} = body;
+    return this.userService.createUserCode(email);
+  }
 }
