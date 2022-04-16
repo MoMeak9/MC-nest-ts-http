@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { User } from "../user/schema/user.schema";
 import { UserService } from "../user/user.service";
-import { md5 } from "../utils";
+import { md5 } from "../../utils";
 
 @Injectable()
 export class AuthService {

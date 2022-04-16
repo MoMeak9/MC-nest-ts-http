@@ -14,6 +14,9 @@ export class Record extends mongoose.Document {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: "Exam" })
   exam: Exam;
 
+  @Prop({ required: true })
+  answer: Array<any>;
+
   @Prop({ default: 0 })
   paper_score: number;
 

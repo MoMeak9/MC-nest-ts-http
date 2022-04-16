@@ -34,6 +34,12 @@ export class User extends mongoose.Document {
   @Prop({ default: 0 })
   score: number;
 
+  @Prop({
+    enum: ["PLAYER", "ADMIN", "SUPER_ADMIN"],
+    default: "PLAYER"
+  })
+  role: string;
+
   @Prop({ default: false })
   is_whitelist: boolean;
 

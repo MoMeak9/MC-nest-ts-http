@@ -13,7 +13,9 @@ import {
 
 import { ExamService } from "./exam.service";
 import { CreateExamDto } from "./dto/create-exam.dto";
-import { ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { CorrectExamDto } from "./dto/correct.exam.dto";
+import { ApiBearerAuth, ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { AuthGuard } from "@nestjs/passport";
 
 @Controller("exam")
 export class ExamController {
@@ -33,6 +35,15 @@ export class ExamController {
     return await this.examService.getExamList();
   }
 
+  @ApiOperation({ summary: "审批白名单申请" })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard("jwt"))
+  @Post("correct")
+  async correctExam(@Body() body: CorrectExamDto, @Req() req) {
+    return await this.examService.correctExam(body, req.userId);
+  }
+
+  @ApiOperation({ summary: "获取考试详情" })
   @Get(":id")
   async getExam(@Param("id") id: string) {
     return await this.examService.getExamDetail(id);

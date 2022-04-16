@@ -68,7 +68,7 @@ export class UserController {
 
   // 用户行为记录
   @ApiOperation({ summary: "用户行为记录" })
-  @ApiBearerAuth() // swagger文档设置token
+  @ApiBearerAuth()
   @UseGuards(AuthGuard("jwt"))
   @Get("createUserBehavior")
   async userBehavior(@Req() req) {

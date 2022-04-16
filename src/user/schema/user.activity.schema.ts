@@ -9,7 +9,7 @@ export class UserActivity extends mongoose.Document {
   @Prop({ type: mongoose.Schema.Types.ObjectId, required: true })
   user: User;
 
-  @Prop({enum: ["LOGIN", "LOGOUT", "REG","UPDATE"], required: true})
+  @Prop({ enum: ["LOGIN", "LOGOUT", "REG", "UPDATE", "REGISTER"], required: true })
   activityType: string;
 
   @Prop({ type: Date, default: Date.now })

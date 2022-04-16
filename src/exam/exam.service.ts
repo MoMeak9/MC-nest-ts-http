@@ -4,6 +4,7 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Exam, ExamDocument } from "./schema/exam.schema";
 import { RecordDocument } from "./schema/record.schema";
 import { CreateExamDto } from "./dto/create-exam.dto";
+import { correctPaper } from "../../utils";
 
 @Injectable()
 export class ExamService {
@@ -40,7 +41,7 @@ export class ExamService {
 
   // 获取单个试卷的考试记录
   async getExamRecord(id: string): Promise<RecordDocument[]> {
-    return this.record.find({exam: id});
+    return this.record.find({ exam: id });
   }
 
   // 获取考试记录详情
@@ -56,6 +57,15 @@ export class ExamService {
   // 更新考试记录
   async updateExamRecord(id: string, record: RecordDocument): Promise<RecordDocument> {
     return this.record.findByIdAndUpdate(id, record);
+  }
+
+  // 阅卷
+  async correctExam(record, userId): Promise<RecordDocument> {
+    const { score, percentScore } = correctPaper(record.answer);
+    record.user = userId;
+    record.paper_score = score;
+    record.paper_percentage = percentScore;
+    return this.addExamRecord(record);
   }
 
   // 添加考试记录

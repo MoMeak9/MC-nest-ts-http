@@ -5,8 +5,9 @@ import { UserCode, UserCodeDocument } from "./schema/user.code.schema";
 import { UserActivity, UserActivityDocument } from "./schema/user.activity.schema";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { v4 } from "uuid";
-import { md5 } from "../utils";
-import { getPagination } from "../utils/paging";
+import { md5 } from "../../utils";
+import { getPagination, sendEmail } from "../../utils";
+import { codeContent } from "../../config/emailContent";
 
 @Injectable()
 export class UserService {
@@ -76,6 +77,10 @@ export class UserService {
       this.userCode.deleteOne({ email });
     }, 120 * 1000);
     const code = Math.random().toString(36).slice(2, 8).toUpperCase();
+    await sendEmail({
+      email,
+      content: codeContent.zh(code)
+    });
     return await this.userCode.create({
       email,
       code
