@@ -8,7 +8,7 @@ export class UserCode extends mongoose.Document {
   @Prop({ required: true })
   email: string;
 
-  @Prop({ required: true })
+  @Prop({ required: true, select: false })
   code: string;
 
   @Prop({ type: Date, default: Date.now })

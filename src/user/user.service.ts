@@ -106,8 +106,8 @@ export class UserService {
   }
 
   // 校验用户身份
-  async checkUserRole(uuid: string): never | Promise<boolean> {
-    const { role } = await this.user.findOne({ uuid });
+  async checkUserRole(_id: string): never | Promise<boolean> {
+    const { role } = await this.user.findById(_id);
     if (role !== "SUPER_ADMIN" && role !== "ADMIN") {
       throw new HttpException(`没有权限，你是${role}`, HttpStatus.UNAUTHORIZED);
     }
