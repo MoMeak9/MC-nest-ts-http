@@ -9,9 +9,13 @@ export class CreateUserDto {
   @IsNotEmpty({ message: "phone is required" })
   readonly phone: string;
 
-  @ApiProperty({ description: "邮箱" })
-  @IsNotEmpty({ message: "邮箱地址必填" })
+  @ApiProperty({ description: "Email" })
+  @IsNotEmpty({ message: "Email is required" })
   readonly email: string;
+
+  @ApiProperty({ description: "code" })
+  @IsNotEmpty({ message: "code is required" })
+  readonly code: string;
 
   @ApiProperty({ description: "password" })
   @IsNotEmpty({ message: "password" })

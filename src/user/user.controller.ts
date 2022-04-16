@@ -34,27 +34,39 @@ export class UserController {
   }
 
   //查找所有 user 路由
+  @ApiOperation({ summary: "查找所有用户" })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard("jwt"))
   @Get("findAll")
-  async findAll() {
-    return this.userService.findAll();
+  async findAll(@Req() req) {
+    return this.userService.findAll(req.user.uuid);
   }
 
   // 查找某一个用户路由
+  @ApiOperation({ summary: "查找某一个用户" })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard("jwt"))
   @Get("findOne")
   async findOne(@Query() query: any) {
     return this.userService.findOne(query.name);
   }
 
   // 删除一个用户的路由
-  @Delete(":sid")
+  @ApiOperation({ summary: "删除一个用户" })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard("jwt"))
+  @Delete(":id")
   deleteUser(@Param() param: any) {
-    return this.userService.delete(param.sid);
+    return this.userService.delete(param.id);
   }
 
   // 更改用户信息的路由
-  @Put(":sid")
+  @ApiOperation({ summary: "更改用户信息" })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard("jwt"))
+  @Put(":id")
   updateUser(@Body() body: any, @Param() param: any) {
-    return this.userService.updateUser(param.sid, body);
+    return this.userService.updateUser(param.id, body);
   }
 
   // 获取用户信息
@@ -63,7 +75,7 @@ export class UserController {
   @UseGuards(AuthGuard("jwt"))
   @Get("getUserInfo")
   async getUserInfo(@Req() req) {
-    return req.user;
+    return this.userService.getUserInfo(req.user._id);
   }
 
   // 用户行为记录
@@ -72,14 +84,14 @@ export class UserController {
   @UseGuards(AuthGuard("jwt"))
   @Get("createUserBehavior")
   async userBehavior(@Req() req) {
-    return this.userService.createUserBehavior(req.user,'LOGIN');
+    return this.userService.createUserBehavior(req.user, "LOGIN");
   }
 
   // 创建验证码
   @ApiOperation({ summary: "创建验证码" })
   @Post("sentCode")
   async sentCode(@Body() body: any) {
-    const {email} = body;
+    const { email } = body;
     return this.userService.createUserCode(email);
   }
 }

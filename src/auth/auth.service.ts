@@ -24,7 +24,10 @@ export class AuthService {
     }
     await this.userService.createUserBehavior(existingUser[0]._id, "LOGIN");
     const token = this.createToken({
-      ...existingUser[0]
+      _id: existingUser[0]._id,
+      name: existingUser[0].name,
+      email: existingUser[0].email,
+      uuid: existingUser[0].uuid
     });
     return {
       token,

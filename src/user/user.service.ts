@@ -21,6 +21,7 @@ export class UserService {
 
   // 用户注册
   async create(createUserDto): Promise<User> {
+    await this.checkUserCode(createUserDto.email, createUserDto.code);
     const existingUser = await this.user.findOne({ $or: [{ email: createUserDto.email }, { phone: createUserDto.phone }] });
     if (existingUser) {
       throw new HttpException("用户已存在", HttpStatus.BAD_REQUEST);
@@ -36,8 +37,9 @@ export class UserService {
   }
 
   // 查找用户列表
-  async findAll(): Promise<any> {
+  async findAll(uuid): Promise<any> {
     // 这里是异步的
+    await this.checkUserRole(uuid);
     return await getPagination(this.user, {});
   }
 
@@ -47,16 +49,21 @@ export class UserService {
     return this.user.find({ email });
   }
 
+  // 获取用户信息
+  async getUserInfo(_id): Promise<any> {
+    return this.user.findById(_id);
+  }
+
   // 删除
-  async delete(sid: number) {
+  async delete(id: number) {
     // 这里是异步的  remove 方法删除成功并返回相应的个数
-    return this.user.remove({ _id: sid });
+    return this.user.remove({ _id: id });
   }
 
   // 修改
-  async updateUser(sid: string, data: any) {
+  async updateUser(id: string, data: any) {
     // 这里是异步的  remove 方法删除成功并返回相应的个数
-    return this.user.updateOne({ _id: sid }, { $set: data });
+    return this.user.updateOne({ _id: id }, { $set: data });
   }
 
   // 创建用户行为
@@ -85,5 +92,25 @@ export class UserService {
       email,
       code
     });
+  }
+
+  // 校验验证码
+  async checkUserCode(email: string, code: string): Promise<UserCode> {
+    const existingCode = await this.userCode.findOne({ email, code });
+    if (!existingCode) {
+      throw new HttpException("验证码错误", HttpStatus.BAD_REQUEST);
+    } else {
+      this.userCode.deleteOne({ email });
+    }
+    return existingCode;
+  }
+
+  // 校验用户身份
+  async checkUserRole(uuid: string): never | Promise<boolean> {
+    const { role } = await this.user.findOne({ uuid });
+    if (role !== "SUPER_ADMIN" && role !== "ADMIN") {
+      throw new HttpException(`没有权限，你是${role}`, HttpStatus.UNAUTHORIZED);
+    }
+    return true;
   }
 }
